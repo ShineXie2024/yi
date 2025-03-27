@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>易经六十四卦</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header class="header">
+        <h1>易经六十四卦</h1>
+    </header>
+
+    <main class="gua-grid" id="guaContainer"></main>
+
+    <script>
+        // 加载卦象数据
+        fetch('data/guas.json')
+            .then(response => response.json())
+            .then(guas => {
+                const container = document.getElementById('guaContainer');
+                guas.forEach(gua => {
+                    const card = document.createElement('div');
+                    card.className = 'gua-card';
+                    card.innerHTML = `
+                        <div class="symbol">${gua.symbol}</div>
+                        <h2>${gua.name}卦</h2>
+                        <p>拼音：${gua.pinyin}</p>
+                    `;
+                    card.onclick = () => window.location.href = `gua.html?id=${gua.id}`;
+                    container.appendChild(card);
+                });
+            });
+    </script>
+</body>
+</html>
