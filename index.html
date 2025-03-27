@@ -1,105 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>易经六十四卦</title>
-    <style>
-        /* 基础样式 */
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .gua-list { list-style: none; padding: 0; }
-        .gua-item { margin: 10px 0; }
-        .gua-link { 
-            text-decoration: none; 
-            color: #333;
-            padding: 5px;
-            display: block;
-        }
-        .gua-link:hover { background: #f0f0f0; }
-        
-        /* 详情页样式 */
-        .detail-page { display: none; }
-        .back-link { 
-            display: block; 
-            margin: 20px 0;
-            color: #666;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>易经六十四卦详解</title>
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <!-- 首页 -->
-    <div id="home-page">
-        <h1>易经六十四卦</h1>
-        <ul class="gua-list" id="guaList"></ul>
-    </div>
+    <header class="app-header">
+        <h1>周易六十四卦</h1>
+    </header>
 
-    <!-- 详情页模板 -->
-    <div id="detail-page" class="detail-page">
-        <a href="javascript:history.back()" class="back-link">← 返回首页</a>
-        <div id="guaContent"></div>
-    </div>
+    <main id="app-container">
+        <!-- 动态内容加载区域 -->
+    </main>
 
-    <script>
-        // 卦象数据
-        const guaData = [
-            {
-                id: 1,
-                name: "乾为天",
-                symbol: "䷀",
-                content: "元亨利贞。象曰：天行健，君子以自强不息..."
-            },
-            {
-                id: 2,
-                name: "坤为地",
-                symbol: "䷁",
-                content: "坤：元亨，利牝马之贞..."
-            }
-            // 其他62卦数据...
-        ];
-
-        // 生成首页列表
-        function renderList() {
-            const list = document.getElementById('guaList');
-            guaData.forEach(gua => {
-                const li = document.createElement('li');
-                li.className = 'gua-item';
-                li.innerHTML = `
-                    <a class="gua-link" href="#${gua.id}">${gua.symbol} ${gua.name}</a>
-                `;
-                list.appendChild(li);
-            });
-        }
-
-        // 显示详情页
-        function showDetail(id) {
-            document.getElementById('home-page').style.display = 'none';
-            document.getElementById('detail-page').style.display = 'block';
-            
-            const gua = guaData.find(g => g.id == id);
-            const content = document.getElementById('guaContent');
-            content.innerHTML = `
-                <h2>${gua.symbol} ${gua.name}</h2>
-                <p>${gua.content}</p>
-            `;
-        }
-
-        // 路由处理
-        window.onhashchange = function() {
-            const id = location.hash.substring(1);
-            id ? showDetail(id) : showHome();
-        };
-
-        function showHome() {
-            document.getElementById('home-page').style.display = 'block';
-            document.getElementById('detail-page').style.display = 'none';
-        }
-
-        // 初始化
-        renderList();
-        if(location.hash) showDetail(location.hash.substring(1));
-    </script>
+    <script src="scripts/hexagram-data.js"></script>
+    <script src="scripts/app.js"></script>
 </body>
 </html>
