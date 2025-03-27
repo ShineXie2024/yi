@@ -1,84 +1,77 @@
-/* 基础样式 */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #8e44ad;
+    --accent-color: #27ae60;
+}
+
 body {
-    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    font-family: 'Noto Serif SC', '楷体', serif;
     line-height: 1.6;
     margin: 0;
     padding: 20px;
-    background-color: #f5f3ef;
+    background: #f8f9fa;
 }
 
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-/* 主页网格布局 */
-.gua-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-.gua-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
+.app-header {
     text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 2rem;
+    border-bottom: 3px solid var(--primary-color);
 }
 
-.gua-card:hover {
+/* 首页样式 */
+.hexagram-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.hexagram-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    text-align: center;
+}
+
+.hexagram-card:hover {
     transform: translateY(-5px);
 }
 
-.symbol {
-    font-size: 3em;
-    margin-bottom: 10px;
-}
-
 /* 详情页样式 */
-.back-link {
-    display: inline-block;
-    margin-bottom: 20px;
-    color: #2c3e50;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.gua-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.symbol-lg {
-    font-size: 6em;
-    line-height: 1;
-    margin: 20px 0;
-}
-
-.section {
+.detail-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
     background: white;
-    border-radius: 12px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.section h2 {
-    color: #2b9939;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-    margin-top: 0;
+.symbol-section {
+    text-align: center;
+    font-size: 4rem;
+    margin: 2rem 0;
 }
 
-.yao-list {
-    padding-left: 20px;
+.info-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-left: 4px solid var(--accent-color);
+    background: #f8f9fa;
 }
 
-.yao-list li {
-    margin-bottom: 12px;
-    color: #555;
+.navigation {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: var(--secondary-color);
+    color: white;
 }
