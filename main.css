@@ -1,0 +1,84 @@
+/* 基础样式 */
+body {
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f3ef;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 主页网格布局 */
+.gua-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.gua-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.gua-card:hover {
+    transform: translateY(-5px);
+}
+
+.symbol {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+/* 详情页样式 */
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.gua-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.symbol-lg {
+    font-size: 6em;
+    line-height: 1;
+    margin: 20px 0;
+}
+
+.section {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.section h2 {
+    color: #2b9939;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+.yao-list {
+    padding-left: 20px;
+}
+
+.yao-list li {
+    margin-bottom: 12px;
+    color: #555;
+}
