@@ -7,6 +7,7 @@ class App {
     }
 
     async init() {
+        this.app.innerHTML = `<div class="loading">加载卦象数据中...</div>`;
         await this.loadHexagrams();
         initRouter(this);
     }
