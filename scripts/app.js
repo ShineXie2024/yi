@@ -12,17 +12,67 @@ class App {
     }
 
     async loadHexagrams() {
-        try {
-            const requests = [];
-            for (let i = 1; i <= 64; i++) {
-                requests.push(fetch(`data/${i}.json`).then(r => r.json()));
-            }
-            this.hexagrams = await Promise.all(requests);
-            this.renderHome();
-        } catch (error) {
-            this.app.innerHTML = `<p class="error">数据加载失败，请刷新重试</p>`;
+    try {
+        // 显示加载状态
+        this.app.innerHTML = `<div class="loading">加载卦象数据中...</div>`;
+        
+        // 生成ID数组 [1,2,...,64]
+        const ids = Array.from({length: 64}, (_, i) => i + 1);
+        
+        // 并行请求优化方案
+        this.hexagrams = await Promise.allSettled(
+            ids.map(id => 
+                fetch(`data/${id}.json`)
+                    .then(response => {
+                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.error(`加载卦象 ${id} 失败:`, error);
+                        return null; // 保持数组位置
+                    })
+            )
+        ).then(results => 
+            results
+                .filter(r => r.status === 'fulfilled' && r.value) // 过滤成功项
+                .map(r => r.value) // 提取数据
+                .sort((a, b) => a.id - b.id) // 确保顺序正确
+        );
+
+        // 检查数据完整性
+        if (this.hexagrams.length < 64) {
+            console.warn(`部分数据加载失败，成功加载 ${this.hexagrams.length}/64 卦`);
         }
+
+        // 缓存到本地
+        localStorage.setItem('hexagrams', JSON.stringify({
+            timestamp: Date.now(),
+            data: this.hexagrams
+        }));
+
+        this.renderHome();
+    } catch (error) {
+        // 尝试使用缓存
+        const cache = localStorage.getItem('hexagrams');
+        if (cache) {
+            try {
+                const { data } = JSON.parse(cache);
+                this.hexagrams = data;
+                this.app.innerHTML = `<p class="warning">网络异常，显示缓存数据</p>`;
+                this.renderHome();
+                return;
+            } catch (e) {
+                console.error('缓存解析失败:', e);
+            }
+        }
+        
+        this.app.innerHTML = `
+            <p class="error">数据加载失败！</p>
+            <button onclick="location.reload()">点击重试</button>
+        `;
+        console.error('数据加载失败:', error);
     }
+}
 
     renderHome() {
         this.app.innerHTML = `
