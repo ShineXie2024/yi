@@ -1,107 +1,89 @@
-class YijingApp {
+import { initRouter } from './router.js';
+
+class App {
     constructor() {
-        this.appContainer = document.getElementById('app-container');
+        this.app = document.getElementById('app');
         this.init();
     }
 
-    init() {
-        this.renderHome();
-        this.setupRouting();
+    async init() {
+        await this.loadHexagrams();
+        initRouter(this);
+    }
+
+    async loadHexagrams() {
+        try {
+            const requests = [];
+            for (let i = 1; i <= 64; i++) {
+                requests.push(fetch(`data/${i}.json`).then(r => r.json()));
+            }
+            this.hexagrams = await Promise.all(requests);
+            this.renderHome();
+        } catch (error) {
+            this.app.innerHTML = `<p class="error">数据加载失败，请刷新重试</p>`;
+        }
     }
 
     renderHome() {
-        const grid = document.createElement('div');
-        grid.className = 'hexagram-grid';
-        
-        hexagrams.forEach(hexagram => {
-            const card = document.createElement('div');
-            card.className = 'hexagram-card';
-            card.innerHTML = `
-                <div class="symbol">${hexagram.symbol}</div>
-                <h3>${hexagram.name}</h3>
-                <p>${hexagram.composition}</p>
-            `;
-            card.addEventListener('click', () => this.showDetail(hexagram.id));
-            grid.appendChild(card);
-        });
-        
-        this.appContainer.innerHTML = '';
-        this.appContainer.appendChild(grid);
+        this.app.innerHTML = `
+            <div class="hexagram-list">
+                ${this.hexagrams.map(hexagram => `
+                    <div class="hexagram-card" data-id="${hexagram.id}">
+                        <div class="symbol">${hexagram.symbol}</div>
+                        <h3>${hexagram.name}</h3>
+                        <p>${hexagram.judgment.text}</p>
+                    </div>
+                `).join('')}
+            </div>
+        `;
     }
 
-    showDetail(id) {
-        const hexagram = hexagrams.find(h => h.id === id);
-        
-        const detailHTML = `
+    renderDetail(hexagram) {
+        this.app.innerHTML = `
             <div class="detail-container">
-                <div class="symbol-section">
-                    <img src="${hexagram.image}" alt="${hexagram.name}" class="symbol-img">
-                    <div class="symbol-text">${hexagram.symbol}</div>
-                </div>
-
-                <div class="info-section">
-                    <h2>${hexagram.name}</h2>
-                    <p><strong>卦象组成：</strong>${hexagram.composition}</p>
-                    <p><strong>属性：</strong>${hexagram.attributes.join(' · ')}</p>
-                </div>
-
+                <button class="back-btn">返回列表</button>
+                
+                <h2 class="section-title">${hexagram.symbol} ${hexagram.name}</h2>
+                
                 <div class="info-section">
                     <h3>卦辞</h3>
-                    <blockquote>${hexagram.judgment}</blockquote>
+                    <blockquote>${hexagram.judgment.text}</blockquote>
+                    <p>${hexagram.judgment.explanation}</p>
                 </div>
 
                 <div class="info-section">
                     <h3>彖传</h3>
-                    <p>${hexagram.tuan}</p>
-                </div>
-
-                <div class="info-section">
-                    <h3>象传</h3>
-                    <p>${hexagram.xiang}</p>
+                    <p>${hexagram.tuan.text}</p>
+                    <p>${hexagram.tuan.explanation}</p>
                 </div>
 
                 <div class="info-section">
                     <h3>爻辞详解</h3>
                     <ul>
-                        ${hexagram.lines.map(line => `<li>${line}</li>`).join('')}
+                        ${hexagram.lines.map(line => `
+                            <li>
+                                <strong>${line.text}</strong>
+                                <p>${line.explanation}</p>
+                            </li>
+                        `).join('')}
                     </ul>
                 </div>
 
                 <div class="info-section">
-                    <h3>关联卦象</h3>
-                    <div class="related-gua">
-                        ${hexagram.related.map(name => 
-                            `<button class="related-btn">${name}</button>`
-                        ).join('')}
+                    <h3>占卜指引</h3>
+                    <div class="zhan-grid">
+                        ${Object.entries(hexagram.zhan).map(([key, value]) => `
+                            <div class="zhan-item">
+                                <h4>${key}</h4>
+                                <p><strong>现状：</strong>${value.explanation}</p>
+                                <p><strong>建议：</strong>${value.advice}</p>
+                            </div>
+                        `).join('')}
                     </div>
-                </div>
-
-                <div class="navigation">
-                    <button class="btn" onclick="window.history.back()">返回首页</button>
                 </div>
             </div>
         `;
-
-        this.appContainer.innerHTML = detailHTML;
-        this.addRelatedListeners();
-    }
-
-    addRelatedListeners() {
-        document.querySelectorAll('.related-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const name = btn.textContent;
-                const hexagram = hexagrams.find(h => h.name === name);
-                if (hexagram) this.showDetail(hexagram.id);
-            });
-        });
-    }
-
-    setupRouting() {
-        window.addEventListener('popstate', () => {
-            if (!location.hash) this.renderHome();
-        });
     }
 }
 
-// 初始化应用
-new YijingApp();
+new App();
